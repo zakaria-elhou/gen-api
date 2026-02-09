@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gen-api-app
+    restart: always
+    volumes:
+      - .:/var/www
+    networks:
+      - gen-api-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: gen-api-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - gen-api-net
+
+  db:
+    image: mysql:8
+    container_name: gen-api-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: genapi
+      MYSQL_USER: genapi
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    networks:
+      - gen-api-net
+
+networks:
+  gen-api-net:
