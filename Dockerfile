@@ -9,7 +9,7 @@ RUN apk add --no-cache \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Workdir
-WORKDIR /var/www/project-gen-api
+WORKDIR /var/www/project/gen-api
 
 # نسخ المشروع
 COPY . .
@@ -24,8 +24,8 @@ RUN [ ! -f .env ] && cp .env.example .env || true
 RUN php artisan key:generate --force
 
 # صلاحيات
-RUN chown -R www-data:www-data /var/www/project-gen-api \
-    && chmod -R 755 /var/www/project-gen-api
+RUN chown -R www-data:www-data /var/www/project/gen-api \
+    && chmod -R 755 /var/www/project/gen-api
 
 EXPOSE 9000
 
