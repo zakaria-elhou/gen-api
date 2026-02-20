@@ -21,7 +21,14 @@ jobs:
             git pull origin main
             docker-compose down
             docker-compose up -d --build
-            sleep 10
+
+            # انتظار container ykhdam
+            until docker exec gen-api-app php artisan --version >/dev/null 2>&1; do
+              echo "Waiting for gen-api-app container..."
+              sleep 5
+            done
+
+            # Run Laravel commands
             docker exec gen-api-app php artisan migrate --force
             docker exec gen-api-app php artisan config:cache
             docker exec gen-api-app php artisan route:cache
