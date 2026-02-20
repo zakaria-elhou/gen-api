@@ -20,9 +20,6 @@ RUN composer install --no-dev --optimize-autoloader
 # نسخ .env example إلا ما كاينش
 RUN [ ! -f .env ] && cp .env.example .env || true
 
-# توليد app key إلا ما كاينش
-RUN php artisan key:generate --force
-
 # صلاحيات
 RUN chown -R www-data:www-data /var/www/project/gen-api \
     && chmod -R 755 /var/www/project/gen-api

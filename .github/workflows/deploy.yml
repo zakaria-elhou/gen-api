@@ -17,6 +17,8 @@ jobs:
           username: root
           key: ${{ secrets.SSH_KEY }}
           script: |
+            set -e
+
             cd /var/www/project/gen-api
 
             git pull origin master
@@ -24,8 +26,12 @@ jobs:
             docker compose down
             docker compose up -d --build
 
-            sleep 10
+            echo "Waiting for container..."
 
-            docker compose exec -T app php artisan migrate --force
-            docker compose exec -T app php artisan config:cache
-            docker compose exec -T app php artisan route:cache
+            until docker exec gen-api-app php -v >/dev/null 2>&1; do
+              sleep 5
+            done
+
+            docker exec gen-api-app php artisan migrate --force || true
+            docker exec gen-api-app php artisan config:cache || true
+            docker exec gen-api-app php artisan route:cache || true
