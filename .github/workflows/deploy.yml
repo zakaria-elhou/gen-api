@@ -21,6 +21,7 @@ jobs:
             git pull origin main
             docker-compose down
             docker-compose up -d --build
-            docker exec laravel_app php artisan migrate --force
-            docker exec laravel_app php artisan config:cache
-            docker exec laravel_app php artisan route:cache
+            sleep 10
+            docker exec gen-api-app php artisan migrate --force
+            docker exec gen-api-app php artisan config:cache
+            docker exec gen-api-app php artisan route:cache
