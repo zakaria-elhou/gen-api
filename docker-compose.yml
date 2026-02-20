@@ -17,7 +17,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - .:/var/www
+      - .:/var/www/project/gen-api
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
