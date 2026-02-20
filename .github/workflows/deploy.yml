@@ -17,7 +17,7 @@ jobs:
           username: root
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /var/www/project
+            cd /var/www/project-gen-api
             git pull origin main
             docker-compose down
             docker-compose up -d --build
