@@ -1,27 +1,26 @@
-name: Deploy gen-api to VPS
+name: Deploy Laravel to VPS
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
+          username: root
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ${{ secrets.APP_PATH }}
+            cd /var/www/project
             git pull origin main
-            docker compose down
-            docker compose up -d --build
-            docker exec gen-api-app php artisan migrate --force
-            docker exec gen-api-app php artisan optimize
+            docker-compose down
+            docker-compose up -d --build
+            docker exec laravel_app php artisan migrate --force
+            docker exec laravel_app php artisan config:cache
+            docker exec laravel_app php artisan route:cache
